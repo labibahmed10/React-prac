@@ -8,7 +8,7 @@ function App() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/users")
+    fetch("http://localhost:5000/user")
       .then((res) => res.json())
       .then((data) => setUsers(data));
   }, []);
@@ -17,10 +17,9 @@ function App() {
     event.preventDefault();
     const name = event.target.name.value;
     const email = event.target.email.value;
-
     const user = { name, email };
 
-    fetch("", {
+    fetch("http://localhost:5000/user", {
       method: "POST", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
@@ -29,7 +28,8 @@ function App() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log(data);
+        setUsers([...users, data]);
       });
   };
   return (
@@ -43,14 +43,16 @@ function App() {
       <h1 className="text-center m-5 text-2xl">Users length: {users.length}</h1>
       <div>
         {users.map((u) => (
-          <p>{u.name}</p>
+          <p key={u._id}>
+            name: {u.name} email: {u.email}
+          </p>
         ))}
       </div>
 
       <div className="mx-auto">
-        <form action="" onSubmit={handleSubmit}>
-          <input className="border m-2 p-4 w-64" type="email" name="email" id="email" />
+        <form onSubmit={handleSubmit}>
           <input className="border m-2 p-4 w-64" type="text" name="name" id="name" />
+          <input className="border m-2 p-4 w-64" type="email" name="email" id="email" />
           <input className="bg-green-300 p-4" type="submit" value="submit" />
         </form>
       </div>
